@@ -1,0 +1,12 @@
+---
+- name: start consul snapshot on unix
+  service:
+    name: consul_snapshot
+    state: started
+    enabled: true
+    # Needed to force SysV service manager on Docker for Molecule tests
+    use: "{{ ansible_service_mgr }}"
+  when:
+    - ansible_os_family != "Darwin"
+    - ansible_os_family != "Windows"
+  listen: 'start snapshot'

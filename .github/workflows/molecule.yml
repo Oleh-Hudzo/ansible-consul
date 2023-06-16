@@ -1,0 +1,40 @@
+---
+name: Molecule
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario:
+          - almalinux-8
+          - almalinux-9
+          - centos-7
+          - centos-stream-8
+          - debian-9
+          - debian-10
+          - fedora-37
+          - oraclelinux-7
+          - oraclelinux-8
+          - rockylinux-8
+          - ubuntu-18.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: "${{ github.repository }}"
+
+      - name: Molecule
+        uses: gofrolist/molecule-action@v2.3.13
+        with:
+          molecule_options: --base-config molecule/_shared/base.yml
+          molecule_args: --scenario-name ${{ matrix.scenario }}
+          molecule_working_dir: "ansible-community/ansible-consul"
